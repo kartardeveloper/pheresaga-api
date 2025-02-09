@@ -8,17 +8,17 @@ const globalSettingSchema = new mongoose.Schema({
     type: String,
   },
   phoneNumber: {
-    type: Number,
+    type: String,
   },
   email: {
     type: String,
   },
-  social: [
-    {
-      label: String,
-      url: String,
-    },
-  ],
+  instagram: {
+    type: String,
+  },
+  youtube: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

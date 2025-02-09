@@ -13,6 +13,8 @@ const photographyInvestmentRoutes = require('../src/api/photography-investment/r
 const cinematographyInvestmentRoutes  = require('../src/api/cinematography-investment/route');
 const careerRoutes = require('../src/api/careers/route')
 const aboutRoutes = require('../src/api/about/route');
+const faqRoutes = require('../src/api/faq/route');
+const globalSettingsRoutes = require('../src/api/globalSettings/route')
 
 
 
@@ -28,7 +30,8 @@ router.use('/photography-investment', photographyInvestmentRoutes);
 router.use('/cinematography-investment', cinematographyInvestmentRoutes);
 router.use('/careers',careerRoutes );
 router.use('/about', aboutRoutes);
-
+router.use('/faqs', faqRoutes);
+router.use('/global-settings', globalSettingsRoutes);
 
 
 module.exports = router;
