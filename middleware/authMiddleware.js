@@ -5,8 +5,6 @@ const secretKey = process.env.SECRETKEY;
 const authMiddleware = (req, res, next) => {
   const tokenHeader = req.header("Authorization") || req.cookies.token;
 
-  console.log(req.cookies)
-
   if (!tokenHeader) {
     return res.status(401).send({ error: "No token provided" });
   }
