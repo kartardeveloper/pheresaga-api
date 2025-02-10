@@ -22,11 +22,22 @@ const photographyInvestmentSchema = new Schema({
     type: String,
 
   },
-
-
+});
+const PhotographyInvestmentSectionSchema = new Schema({
+  title: {
+      type: String,
+      required: true
+  },
+  description: {
+      type: String,
+      required: true
+  },
+  media:{
+      type:String
+  }
 
 });
 
 const photographyInvestment = mongoose.model('photographyInvestment', photographyInvestmentSchema);
-
-module.exports = photographyInvestment;
+const PhotographyInvestmentSection = mongoose.model('PhotographyInvestmentSection', PhotographyInvestmentSectionSchema);
+module.exports = {photographyInvestment, PhotographyInvestmentSection};

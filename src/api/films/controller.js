@@ -55,6 +55,19 @@ module.exports = {
       return res.status(400).json({ error: "Film deletion failed" });
     }
   },
+  
+  deleteImages: async (req, res)=>{
+    try {
+      const id= req.query
+      const wedding = await Photography.findById(id)
+      if(!wedding){
+        return res.status(404).json({message:"Wedding not found"})
+      }
+      // delete media by name 
+    } catch (error) {
+      
+    }
+  },
 
   //Section header
   createFilmSectionHeader: async (req, res) => {

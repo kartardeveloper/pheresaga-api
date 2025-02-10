@@ -12,7 +12,7 @@ module.exports = {
         }
 
         res.status(200).json({
-          message: "Image uploaded successfully.",
+          message: "File uploaded successfully.",
           filePath: req.file.path,
         });
       });
@@ -34,7 +34,7 @@ module.exports = {
         const filePaths = req.files.map((file) => file.path);
 
         res.status(200).json({
-          message: "Images uploaded successfully.",
+          message: "Files uploaded successfully.",
           filePaths: filePaths,
         });
       });

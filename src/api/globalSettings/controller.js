@@ -33,7 +33,7 @@ module.exports = {
         youtube,
       });
       await newSetting.save();
-      res.status(201).json(newSetting);
+      res.status(200).json(newSetting);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

@@ -124,4 +124,16 @@ module.exports = {
         .json({ message: "Error deleting wedding", error: error.message });
     }
   },
+  deleteImages: async (req, res)=>{
+    try {
+      const id= req.query
+      const wedding = await Photography.findById(id)
+      if(!wedding){
+        return res.status(404).json({message:"Wedding not found"})
+      }
+      // delete media by name 
+    } catch (error) {
+      
+    }
+  }
 };

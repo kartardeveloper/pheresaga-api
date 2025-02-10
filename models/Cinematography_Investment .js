@@ -24,7 +24,21 @@ const cinematographyInvestmentSchema = new Schema({
 
 
 });
+const CinematographyInvestmentSectionSchema = new Schema({
+  title: {
+      type: String,
+      required: true
+  },
+  description: {
+      type: String,
+      required: true
+  },
+  media:[{
+      type:String
+  }]
+
+});
 
 const cinematographyInvestment = mongoose.model('cinematographyInvestment', cinematographyInvestmentSchema);
-
-module.exports = cinematographyInvestment;
+const CinematographyInvestmentSection = mongoose.model('CinematographyInvestmentSection', CinematographyInvestmentSectionSchema);
+module.exports = {cinematographyInvestment, CinematographyInvestmentSection};
