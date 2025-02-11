@@ -15,10 +15,21 @@ app.use(express.urlencoded({ limit: "100mb", extended: true }));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000/", process.env.CORS_ROUTE],
+    origin: function (origin, callback) {
+      console.log("Origin:", origin);
+      if (
+        ["http://localhost:3000", process.env.CORS_ROUTE].includes(origin) ||
+        !origin
+      ) {
+        callback(null, true); // Allow the origin
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
+
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGOURI);
