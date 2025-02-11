@@ -15,7 +15,7 @@ app.use(express.urlencoded({ limit: "100mb", extended: true }));
 
 app.use(
   cors({
-    origin: process.env.CORS_ROUTE,
+    origin: ["http://localhost:3000/", process.env.CORS_ROUTE],
     credentials: true,
   })
 );
