@@ -24,6 +24,9 @@ const globalSettingSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  filmsHeading: {
+    type: String,
+  },
   filmsBanner: {
     type: String,
     required: true

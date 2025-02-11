@@ -22,8 +22,17 @@ module.exports = {
   },
   createGlobalSetting: async (req, res) => {
     try {
-      const { logo, location, phoneNumber, email, instagram, youtube } =
-        req.body;
+      const {
+        logo,
+        location,
+        phoneNumber,
+        email,
+        instagram,
+        youtube,
+        contactBanner,
+        filmsHeading,
+        filmsBanner,
+      } = req.body;
       const newSetting = new GlobalSetting({
         logo,
         location,
@@ -31,6 +40,9 @@ module.exports = {
         email,
         instagram,
         youtube,
+        contactBanner,
+        filmsHeading,
+        filmsBanner,
       });
       await newSetting.save();
       res.status(200).json(newSetting);
@@ -41,11 +53,30 @@ module.exports = {
 
   updateGlobalSetting: async (req, res) => {
     try {
-      const { logo, location, phoneNumber, email, instagram, youtube } =
-        req.body;
+      const {
+        logo,
+        location,
+        phoneNumber,
+        email,
+        instagram,
+        youtube,
+        contactBanner,
+        filmsHeading,
+        filmsBanner,
+      } = req.body;
       const updatedSetting = await GlobalSetting.findByIdAndUpdate(
         req.query.id,
-        { logo, location, phoneNumber, email, instagram, youtube },
+        {
+          logo,
+          location,
+          phoneNumber,
+          email,
+          instagram,
+          youtube,
+          contactBanner,
+          filmsHeading,
+          filmsBanner,
+        },
         { new: true, runValidators: true }
       );
       if (!updatedSetting) {
