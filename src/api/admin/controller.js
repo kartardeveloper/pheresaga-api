@@ -10,8 +10,6 @@ module.exports = {
       if (!user) {
         return res.status(404).send({ error: "User not found" });
       }
-      console.log("Password from request:", password);
-      console.log("Stored hashed password:", user.password);
 
       let isMatch;
 

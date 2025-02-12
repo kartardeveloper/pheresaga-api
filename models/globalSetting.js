@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const globalSettingSchema = new mongoose.Schema({
   logo: {
     type: String,
-    required: true
+    required: true,
   },
   location: {
     type: String,
@@ -22,14 +22,7 @@ const globalSettingSchema = new mongoose.Schema({
   },
   contactBanner: {
     type: String,
-    required: true
-  },
-  filmsHeading: {
-    type: String,
-  },
-  filmsBanner: {
-    type: String,
-    required: true
+    required: true,
   },
   createdAt: {
     type: Date,

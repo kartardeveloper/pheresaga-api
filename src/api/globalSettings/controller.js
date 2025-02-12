@@ -30,8 +30,6 @@ module.exports = {
         instagram,
         youtube,
         contactBanner,
-        filmsHeading,
-        filmsBanner,
       } = req.body;
       const newSetting = new GlobalSetting({
         logo,
@@ -41,8 +39,6 @@ module.exports = {
         instagram,
         youtube,
         contactBanner,
-        filmsHeading,
-        filmsBanner,
       });
       await newSetting.save();
       res.status(200).json(newSetting);
@@ -61,8 +57,6 @@ module.exports = {
         instagram,
         youtube,
         contactBanner,
-        filmsHeading,
-        filmsBanner,
       } = req.body;
       const updatedSetting = await GlobalSetting.findByIdAndUpdate(
         req.query.id,
@@ -74,8 +68,6 @@ module.exports = {
           instagram,
           youtube,
           contactBanner,
-          filmsHeading,
-          filmsBanner,
         },
         { new: true, runValidators: true }
       );
