@@ -77,7 +77,7 @@ module.exports = {
 
     getCinematographyInvestmentSectionById: async (req, res) => {
         try {
-            const { id } = req.params;
+            const { id } = req.query;
             const section = await CinematographyInvestmentSection.findById(id);
 
             if (!section) {
@@ -95,7 +95,7 @@ module.exports = {
     },
     updateCinematographyInvestmentSection: async (req, res) => {
         try {
-            const { id } = req.params;
+            const { id } = req.query;
             const { title, description, media } = req.body;
 
             const updatedSection = await CinematographyInvestmentSection.findByIdAndUpdate(
@@ -119,7 +119,7 @@ module.exports = {
     },
     deleteCinematographyInvestmentSection: async (req, res) => {
         try {
-            const { id } = req.params;
+            const { id } = req.query;
             const deletedSection = await CinematographyInvestmentSection.findByIdAndDelete(id);
 
             if (!deletedSection) {
