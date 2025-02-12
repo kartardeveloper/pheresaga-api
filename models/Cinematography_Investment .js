@@ -27,7 +27,7 @@ const cinematographyInvestmentSchema = new Schema({
 const CinematographyInvestmentSectionSchema = new Schema({
   title: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,

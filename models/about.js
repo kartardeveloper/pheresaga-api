@@ -6,6 +6,10 @@ const aboutSchema = new Schema({
         type: String,
         required: true,
     },
+    designation: {
+        type: String,
+        required: false,
+    },
     description: {
         type: String,
         required: false,
