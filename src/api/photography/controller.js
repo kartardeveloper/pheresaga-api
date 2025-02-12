@@ -124,16 +124,42 @@ module.exports = {
         .json({ message: "Error deleting wedding", error: error.message });
     }
   },
-  deleteImages: async (req, res)=>{
+
+  deleteImages: async (req, res) => {
     try {
-      const id= req.query
-      const wedding = await Photography.findById(id)
-      if(!wedding){
-        return res.status(404).json({message:"Wedding not found"})
+      const { id, mediaName } = req.query;
+      if (!id || !mediaName) {
+        return res.status(400).json({ message: 'Missing wedding ID or media name' });
       }
-      // delete media by name 
+
+      const wedding = await Photography.findById(id);
+      if (!wedding) {
+        return res.status(404).json({ message: 'Wedding not found' });
+      }
+
+      const mediaIndex = wedding.media.indexOf(mediaName);
+      if (mediaIndex === -1) {
+        return res.status(404).json({ message: 'Media not found' });
+      }
+
+      wedding.media.splice(mediaIndex, 1);
+      const mediaNameWithoutPrefix = mediaName.replace(/^uploads\//, '');
+      const mediaFilePath = path.join(__dirname, '../../../uploads', mediaNameWithoutPrefix);
+
+      if (fs.existsSync(mediaFilePath)) {
+        await fs.promises.unlink(mediaFilePath);
+        console.log(`File ${mediaName} deleted successfully.`);
+      } else {
+        console.log(`File ${mediaName} not found in upload folder.`);
+      }
+
+      await wedding.save();
+
+      return res.status(200).json({ message: 'Media deleted successfully' });
+
     } catch (error) {
-      
+      console.error(error);
+      return res.status(500).json({ message: 'Something went wrong, please try again.' });
     }
   }
 };

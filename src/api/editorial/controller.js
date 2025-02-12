@@ -82,10 +82,9 @@ module.exports = {
         return res.status(500).json({ message: "Invalid file path" });
       }
 
-      // Convert relative path to absolute path
+
       const filePath = path.resolve(removedFile.path);
 
-      // Delete the file from the file system
       await new Promise((resolve, reject) => {
         fs.unlink(filePath, (err) => {
           if (err) {

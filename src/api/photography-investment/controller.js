@@ -19,7 +19,7 @@ module.exports = {
     },
     getPhotographyInvestmentById: async (req, res) => {
         try {
-            const investment = await photographyInvestment.findById(req.params.id);
+            const investment = await photographyInvestment.findById(req.query.id);
             return res.send(investment);
         } catch (err) {
             return res.status(400).send({ error: 'Registration failed' });
@@ -35,7 +35,7 @@ module.exports = {
     },
     deletePhotographyInvestment: async (req, res) => {
         try {
-            await photographyInvestment.findByIdAndDelete(req.params.id);
+            await photographyInvestment.findByIdAndDelete(req.query.id);
             return res.send();
         } catch (err) {
             return res.status(400).send({ error: 'Registration failed' });
@@ -76,7 +76,7 @@ module.exports = {
 
     getPhotographyInvestmentSectionById: async (req, res) => {
         try {
-            const { id } = req.params;
+            const { id } = req.query;
             const section = await PhotographyInvestmentSection.findById(id);
 
             if (!section) {
@@ -94,7 +94,7 @@ module.exports = {
     },
     updatePhotographyInvestmentSection: async (req, res) => {
         try {
-            const { id } = req.params;
+            const { id } = req.query;
             const { title, description, media } = req.body;
 
             const updatedSection = await PhotographyInvestmentSection.findByIdAndUpdate(
@@ -118,7 +118,7 @@ module.exports = {
     },
     deletePhotographyInvestmentSection: async (req, res) => {
         try {
-            const { id } = req.params;
+            const { id } = req.query;
             const deletedSection = await PhotographyInvestmentSection.findByIdAndDelete(id);
 
             if (!deletedSection) {

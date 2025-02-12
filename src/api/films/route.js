@@ -10,18 +10,10 @@ router.put("/update", authMiddleware, filmController.updateFilm);
 router.delete("/delete", authMiddleware, filmController.deleteFilm);
 
 //Section header
-router.post(
-  "/create-section-header",
-  authMiddleware,
-  filmController.createFilmSectionHeader
-);
+router.post("/create-section-header",authMiddleware,filmController.createFilmSectionHeader);
 router.get("/all-headers", filmController.getAllFilmSectionHeaders);
 router.get("/header-details", filmController.getFilmSectionHeaderById);
-router.put(
-  "/update-header",
-  authMiddleware,
-  filmController.updateFilmSectionHeader
-);
+router.put( "/update-header",authMiddleware,filmController.updateFilmSectionHeader);
 // router.delete('/:id', authMiddleware, filmController.deleteFilmSectionHeader);
 
 module.exports = router;

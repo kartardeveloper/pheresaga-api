@@ -31,7 +31,7 @@ router.get(
   "/section/all",
   cinematographyInvestmentController.getAllCinematographyInvestmentSections
 );
-router.get(
+router.put(
   "/section/update",
   cinematographyInvestmentController.updateCinematographyInvestmentSection
 );

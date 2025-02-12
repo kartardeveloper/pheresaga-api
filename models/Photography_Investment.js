@@ -31,11 +31,13 @@ const PhotographyInvestmentSectionSchema = new Schema({
   },
   description: {
     type: String,
-    required: true,
+    required: false,
   },
-  media: {
-    type: String,
-  },
+  media: [
+    {
+      type: String,
+    },
+  ],
 });
 
 const photographyInvestment = mongoose.model(

@@ -61,11 +61,9 @@ const headerSectionSchema = new Schema({
   firstLine: { type: String },
   secondLine: { type: String },
   thirdLine: { type: String },
-  media: [
-    {
-      type: String,
-    },
-  ],
+  media: [{
+      type: String
+    }],
 });
 const HeaderSection = mongoose.model(
   "HeaderSectionCareer",

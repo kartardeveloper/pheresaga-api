@@ -1,5 +1,6 @@
 const HeaderSectionCareer = require("../../../models/careers");
-
+const fs = require('fs');
+const path = require('path');
 module.exports = {
   // createCareer: async (req, res) => {
   //   try {
@@ -94,17 +95,69 @@ module.exports = {
       res.status(500).json({ message: error.message });
     }
   },
-  deleteHeaderSection: async (req, res) => {
+
+  deleteHeaderImage: async (req, res) => {
     try {
-      const deletedHeader = await HeaderSectionCareer.findByIdAndDelete(
-        req.query.id
-      );
-      if (!deletedHeader) {
+      // Find the header section document
+      const headerSection = await HeaderSectionCareer.findOne();
+  
+      if (!headerSection) {
         return res.status(404).json({ message: "Header Section not found" });
       }
-      res.status(200).json({ message: "Header Section deleted successfully" });
+  
+      const { id } = req.query;
+  
+      // Check if media exists and is an array
+      if (headerSection.media && Array.isArray(headerSection.media)) {
+        let mediaFound = false;
+  
+        console.log("Media List: ", headerSection.media);
+  
+        // Loop through each media item to find the matching one
+        for (let i = 0; i < headerSection.media.length; i++) {
+          const mediaFile = headerSection.media[i];
+          
+          if (mediaFile === id) {
+            mediaFound = true;
+  
+            const mediaNameWithoutPrefix = mediaFile.replace(/^uploads\//, '');
+            console.log("Media Name Without Prefix:", mediaNameWithoutPrefix);
+  
+            // Construct the file path
+            const filePath = path.join(__dirname, '../../../uploads', mediaNameWithoutPrefix);
+            console.log("Full file path to delete:", filePath);
+  
+            // Check if the file exists and delete it
+            if (fs.existsSync(filePath)) {
+              await fs.promises.unlink(filePath);
+              console.log(`File ${mediaFile} deleted successfully.`);
+            } else {
+              console.warn(`File ${mediaFile} not found in the upload folder: ${filePath}`);
+            }
+  
+            // Remove the media item from the array
+            headerSection.media.splice(i, 1);
+            break;  // Exit loop after deleting the matching media file
+          }
+        }
+  
+        // If the media item was not found, send error
+        if (!mediaFound) {
+          return res.status(404).json({ message: "Media item not found" });
+        }
+  
+        // Save the updated header section (with the media item removed)
+        await headerSection.save();
+  
+        res.status(200).json({ message: "Header Section image deleted successfully" });
+      } else {
+        return res.status(400).json({ message: "No media found in the header section" });
+      }
+  
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      console.error(error);
+      res.status(500).json({ message: "Error deleting header section", error: error.message });
     }
-  },
+  }
+  
 };

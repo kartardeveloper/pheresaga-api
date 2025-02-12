@@ -13,6 +13,6 @@ router.post('/add-header', authMiddleware, careerController.createHeaderSection)
 router.get('/all-header',  careerController.getAllHeaderSections);
 router.get('/detail-header',  careerController.getHeaderSectionById);
 router.put('/update-header', authMiddleware, careerController.updateHeaderSection);
-router.delete('/delete-header', authMiddleware, careerController.deleteHeaderSection)
+router.delete('/delete-image', authMiddleware, careerController.deleteHeaderImage)
 
 module.exports = router;
