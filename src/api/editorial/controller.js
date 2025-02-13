@@ -64,10 +64,15 @@ module.exports = {
         return res.status(404).json({ message: "Editorial not found" });
       }
 
-      const mediaNameWithoutPrefix = filename.replace(/^uploads\//, "");
+      const mediaNameWithoutPrefix = filename.replace(
+        /^[\\/]?uploads[\\/]/,
+        ""
+      );
 
       const fileIndex = editorialItem.gallery.findIndex(
-        (file) => file.path === mediaNameWithoutPrefix
+        (file) =>
+          file.path.replace(/^[\\/]?uploads[\\/]/, "") ===
+          mediaNameWithoutPrefix
       );
       if (fileIndex === -1) {
         return res
