@@ -69,11 +69,10 @@ module.exports = {
         ""
       );
 
-      const fileIndex = editorialItem.gallery.findIndex(
-        (file) =>
-          file.path.replace(/^[\\/]?uploads[\\/]/, "") ===
-          mediaNameWithoutPrefix
-      );
+      const fileIndex = editorialItem.gallery.findIndex((file) => {
+        return file.path.replace(/^[\\/]?uploads[\\/]/, "") === mediaNameWithoutPrefix;
+      });
+
       if (fileIndex === -1) {
         return res
           .status(404)
@@ -81,6 +80,7 @@ module.exports = {
       }
 
       const removedFile = editorialItem.gallery.splice(fileIndex, 1)[0];
+      console.log(removedFile);
       if (!removedFile.path || typeof removedFile.path !== "string") {
         return res.status(500).json({ message: "Invalid file path" });
       }
