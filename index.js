@@ -9,18 +9,20 @@ const cookieParser = require("cookie-parser");
 
 app.use(express.json());
 app.use(cookieParser());
-
-// app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
     origin: function (origin, callback) {
       if (
-        ["http://localhost:3000", process.env.CORS_ROUTE].includes(origin) ||
+        [
+          "http://localhost:3000",
+          "http://pheresaga.com",
+          process.env.CORS_ROUTE,
+        ].includes(origin) ||
         !origin
       ) {
-        callback(null, true); // Allow the origin
+        callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
@@ -40,10 +42,13 @@ const connectDB = async () => {
 };
 
 connectDB();
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.get("/", (req, res) => {
   res.send("Hello, welcome to the Node.js API!");
 });
+
 app.use(router);
 
 app.get("/api", (req, res) => {
@@ -53,6 +58,7 @@ app.get("/api", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
