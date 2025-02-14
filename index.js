@@ -17,7 +17,7 @@ app.use(
       if (
         [
           "http://localhost:3000",
-          "http://pheresaga.com",
+          "https://pheresaga.com",
           process.env.CORS_ROUTE,
         ].includes(origin) ||
         !origin
