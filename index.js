@@ -18,6 +18,7 @@ app.use(
         [
           "http://localhost:3000",
           "https://pheresaga.com",
+          "*",
           process.env.CORS_ROUTE,
         ].includes(origin) ||
         !origin
