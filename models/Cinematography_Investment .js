@@ -33,11 +33,10 @@ const CinematographyInvestmentSectionSchema = new Schema({
     type: String,
     required: false,
   },
-  media: [
-    {
-      type: String,
-    },
-  ],
+  media: {
+    type: String,
+    required: true,
+  },
 });
 
 const cinematographyInvestment = mongoose.model(
