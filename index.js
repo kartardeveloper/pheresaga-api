@@ -7,9 +7,10 @@ const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '500mb' }));
 app.use(cookieParser());
 app.use(express.urlencoded({ limit: '500mb', extended: true }));
+
 
 app.use(
   cors({
