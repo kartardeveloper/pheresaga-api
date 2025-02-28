@@ -20,6 +20,15 @@ const globalSettingSchema = new mongoose.Schema({
   youtube: {
     type: String,
   },
+  announcementBarText: {
+    type: String,
+  },
+  announcementBarTextColor: {
+    type: String,
+  },
+  announcementBarBgColor: {
+    type: String,
+  },
   contactBanner: {
     type: String,
     required: true,

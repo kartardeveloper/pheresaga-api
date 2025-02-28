@@ -29,6 +29,9 @@ module.exports = {
         email,
         instagram,
         youtube,
+        announcementBarText,
+        announcementBarTextColor,
+        announcementBarBgColor,
         contactBanner,
       } = req.body;
       const newSetting = new GlobalSetting({
@@ -38,6 +41,9 @@ module.exports = {
         email,
         instagram,
         youtube,
+        announcementBarText,
+        announcementBarTextColor,
+        announcementBarBgColor,
         contactBanner,
       });
       await newSetting.save();
@@ -56,6 +62,9 @@ module.exports = {
         email,
         instagram,
         youtube,
+        announcementBarText,
+        announcementBarTextColor,
+        announcementBarBgColor,
         contactBanner,
       } = req.body;
       const updatedSetting = await GlobalSetting.findByIdAndUpdate(
@@ -67,6 +76,9 @@ module.exports = {
           email,
           instagram,
           youtube,
+          announcementBarText,
+          announcementBarTextColor,
+          announcementBarBgColor,
           contactBanner,
         },
         { new: true, runValidators: true }
