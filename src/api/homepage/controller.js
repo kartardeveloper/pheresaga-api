@@ -1,6 +1,6 @@
 const homepageSections = require("../../../models/Homepage");
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 module.exports = {
   getHomePage: async (req, res) => {
     try {
@@ -31,6 +31,7 @@ module.exports = {
         "hero",
         "about",
         "gallery",
+        "weddings",
         "video_with_text",
         "videos_grid",
         "image_banner",
@@ -63,7 +64,6 @@ module.exports = {
   },
   deleteHomepageGalleryImages: async (req, res) => {
     try {
-
       const homepage = await homepageSections.findOne();
       if (!homepage) {
         return res.status(404).json({ message: "Homepage data not found" });
@@ -80,8 +80,12 @@ module.exports = {
         if (mediaItem === id) {
           mediaFound = true;
 
-          const mediaNameWithoutPrefix = mediaItem.replace(/^uploads\//, '');
-          const mediaFilePath = path.join(__dirname, '../../../uploads', mediaNameWithoutPrefix);
+          const mediaNameWithoutPrefix = mediaItem.replace(/^uploads\//, "");
+          const mediaFilePath = path.join(
+            __dirname,
+            "../../../uploads",
+            mediaNameWithoutPrefix
+          );
 
           if (fs.existsSync(mediaFilePath)) {
             await fs.promises.unlink(mediaFilePath);
@@ -104,7 +108,9 @@ module.exports = {
         { $set: { gallery: homepage.gallery } }
       );
 
-      res.status(200).json({ message: "Gallery section item deleted successfully" });
+      res
+        .status(200)
+        .json({ message: "Gallery section item deleted successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({
@@ -115,7 +121,6 @@ module.exports = {
   },
   deleteHomepageAboutImage: async (req, res) => {
     try {
-
       const homepage = await homepageSections.findOne();
       if (!homepage) {
         return res.status(404).json({ message: "Homepage data not found" });
@@ -124,7 +129,9 @@ module.exports = {
       const { id } = req.query;
 
       if (!Array.isArray(homepage.about.media)) {
-        return res.status(400).json({ message: "About section media is not an array" });
+        return res
+          .status(400)
+          .json({ message: "About section media is not an array" });
       }
 
       let mediaFound = false;
@@ -133,8 +140,12 @@ module.exports = {
 
         if (mediaItem === id) {
           mediaFound = true;
-          const mediaNameWithoutPrefix = mediaItem.replace(/^uploads\//, '');
-          const mediaFilePath = path.join(__dirname, '../../../uploads', mediaNameWithoutPrefix);
+          const mediaNameWithoutPrefix = mediaItem.replace(/^uploads\//, "");
+          const mediaFilePath = path.join(
+            __dirname,
+            "../../../uploads",
+            mediaNameWithoutPrefix
+          );
 
           if (fs.existsSync(mediaFilePath)) {
             await fs.promises.unlink(mediaFilePath);
@@ -152,12 +163,11 @@ module.exports = {
         return res.status(404).json({ message: "Media item not found" });
       }
 
-      await homepageSections.updateOne(
-        {},
-        { $set: { about: homepage.about } }
-      );
+      await homepageSections.updateOne({}, { $set: { about: homepage.about } });
 
-      res.status(200).json({ message: "About section image deleted successfully" });
+      res
+        .status(200)
+        .json({ message: "About section image deleted successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({
@@ -165,6 +175,5 @@ module.exports = {
         error: error.message,
       });
     }
-  }
-
+  },
 };

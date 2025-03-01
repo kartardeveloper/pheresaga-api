@@ -15,6 +15,13 @@ const homepageSchema = new Schema({
   gallery: {
     media: [{ type: String }],
   },
+  weddings: [
+    {
+      type: String,
+      required: true,
+      maxlength: 100,
+    },
+  ],
   video_with_text: {
     title: { type: String, required: false },
     description: { type: String, required: false },
