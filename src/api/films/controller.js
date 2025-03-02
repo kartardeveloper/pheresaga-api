@@ -4,7 +4,9 @@ module.exports = {
   createFilm: async (req, res) => {
     try {
       const film = await Films.create(req.body);
-      return res.status(201).json({ film, message: "Film created successfully" });
+      return res
+        .status(201)
+        .json({ film, message: "Film created successfully" });
     } catch (err) {
       return res.status(400).json({ error: "Film creation failed" });
     }
@@ -47,6 +49,31 @@ module.exports = {
       return res.status(400).json({ error: "Film update failed" });
     }
   },
+  updateFilmsOrder: async (req, res) => {
+    try {
+      const documents = req.body;
+
+      const bulkOperations = documents.map((doc) => ({
+        updateOne: {
+          filter: { _id: doc._id },
+          update: { $set: { srNo: doc.srNo } }, // Assign sequential numbers
+        },
+      }));
+
+      if (bulkOperations.length > 0) {
+        const result = await Films.bulkWrite(bulkOperations);
+        res.status(200).json({
+          message: `Matched ${result.matchedCount} documents and modified ${result.modifiedCount} documents`,
+        });
+      } else {
+        console.log("No documents found to update.");
+      }
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Error updating wedding", error: error.message });
+    }
+  },
   deleteFilm: async (req, res) => {
     try {
       await Films.findByIdAndDelete(req.query.id);
@@ -55,27 +82,23 @@ module.exports = {
       return res.status(400).json({ error: "Film deletion failed" });
     }
   },
-  
-  deleteImages: async (req, res)=>{
+
+  deleteImages: async (req, res) => {
     try {
-      const id= req.query
-      const wedding = await Photography.findById(id)
-      if(!wedding){
-        return res.status(404).json({message:"Wedding not found"})
+      const id = req.query;
+      const wedding = await Photography.findById(id);
+      if (!wedding) {
+        return res.status(404).json({ message: "Wedding not found" });
       }
-      // delete media by name 
-    } catch (error) {
-      
-    }
+      // delete media by name
+    } catch (error) {}
   },
 
   //Section header
   createFilmSectionHeader: async (req, res) => {
     try {
       const film = await FilmHeader.create(req.body);
-      return res
-        .status(201)
-        .json({ film });
+      return res.status(201).json({ film });
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }

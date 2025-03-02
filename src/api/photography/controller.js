@@ -15,6 +15,7 @@ module.exports = {
       }
 
       const newPhotography = new Photography({
+        srNo,
         title,
         description,
         credits: credits || "",
@@ -95,6 +96,33 @@ module.exports = {
         .json({ message: "Error updating wedding", error: error.message });
     }
   },
+  updatePhotographyOrder: async (req, res) => {
+    try {
+      const documents = req.body;
+      
+      const bulkOperations = documents.map((doc) => ({
+        updateOne: {
+          filter: { _id: doc._id },
+          update: { $set: { srNo: doc.srNo } }, // Assign sequential numbers
+        },
+      }));
+      
+      if (bulkOperations.length > 0) {
+        const result = await Photography.bulkWrite(bulkOperations);
+        res
+          .status(200)
+          .json({
+            message: `Matched ${result.matchedCount} documents and modified ${result.modifiedCount} documents`,
+          });
+      } else {
+        console.log("No documents found to update.");
+      }
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Error updating wedding", error: error.message });
+    }
+  },
   deletePhotography: async (req, res) => {
     try {
       const { id } = req.query;
@@ -129,22 +157,28 @@ module.exports = {
     try {
       const { id, mediaName } = req.query;
       if (!id || !mediaName) {
-        return res.status(400).json({ message: 'Missing wedding ID or media name' });
+        return res
+          .status(400)
+          .json({ message: "Missing wedding ID or media name" });
       }
 
       const wedding = await Photography.findById(id);
       if (!wedding) {
-        return res.status(404).json({ message: 'Wedding not found' });
+        return res.status(404).json({ message: "Wedding not found" });
       }
 
       const mediaIndex = wedding.media.indexOf(mediaName);
       if (mediaIndex === -1) {
-        return res.status(404).json({ message: 'Media not found' });
+        return res.status(404).json({ message: "Media not found" });
       }
 
       wedding.media.splice(mediaIndex, 1);
-      const mediaNameWithoutPrefix = mediaName.replace(/^uploads\//, '');
-      const mediaFilePath = path.join(__dirname, '../../../uploads', mediaNameWithoutPrefix);
+      const mediaNameWithoutPrefix = mediaName.replace(/^uploads\//, "");
+      const mediaFilePath = path.join(
+        __dirname,
+        "../../../uploads",
+        mediaNameWithoutPrefix
+      );
 
       if (fs.existsSync(mediaFilePath)) {
         await fs.promises.unlink(mediaFilePath);
@@ -155,11 +189,12 @@ module.exports = {
 
       await wedding.save();
 
-      return res.status(200).json({ message: 'Media deleted successfully' });
-
+      return res.status(200).json({ message: "Media deleted successfully" });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Something went wrong, please try again.' });
+      return res
+        .status(500)
+        .json({ message: "Something went wrong, please try again." });
     }
-  }
+  },
 };

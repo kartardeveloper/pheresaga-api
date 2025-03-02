@@ -1,14 +1,15 @@
 const express = require('express');
 const authMiddleware = require('../../../middleware/authMiddleware');
-const cinematographyController = require('./controller');
+const photographyController = require('./controller');
 const router = express.Router();
 
 
-router.post('/create', authMiddleware, cinematographyController.createphotography);
-router.get('/all',cinematographyController.getAllPhotography);
-router.get('/wedding-details', cinematographyController.getPhotographyById);
-router.put('/update', authMiddleware, cinematographyController.updatePhotography);
-router.delete('/delete', authMiddleware, cinematographyController.deletePhotography);
-router.delete('/delete-images', authMiddleware , cinematographyController.deleteImages)
+router.post('/create', authMiddleware, photographyController.createphotography);
+router.get('/all',photographyController.getAllPhotography);
+router.get('/wedding-details', photographyController.getPhotographyById);
+router.put('/update', authMiddleware, photographyController.updatePhotography);
+router.delete('/delete', authMiddleware, photographyController.deletePhotography);
+router.delete('/delete-images', authMiddleware , photographyController.deleteImages)
+router.put('/update-order', authMiddleware, photographyController.updatePhotographyOrder);
 
 module.exports = router;
