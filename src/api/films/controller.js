@@ -16,7 +16,7 @@ module.exports = {
 
       bulkOperations.push({
         insertOne: {
-          document: newFilm
+          document: {...newFilm, srNo: 1}
         }
       })
 

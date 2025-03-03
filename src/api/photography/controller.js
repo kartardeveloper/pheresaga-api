@@ -5,7 +5,7 @@ const path = require("path");
 module.exports = {
   createphotography: async (req, res) => {
     try {
-      const { newWedding: { srNo, title, description, credits, media, thumbnail, category }, oldWeddings } =
+      const { newWedding: { title, description, credits, media, thumbnail, category }, oldWeddings } =
         req.body;
 
       if (!title || !description || !category) {
@@ -24,7 +24,7 @@ module.exports = {
       bulkOperations.push({
         insertOne: {
           document: {
-            srNo,
+            srNo: 1,
             title,
             description,
             credits: credits || "",
