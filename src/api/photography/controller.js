@@ -5,7 +5,7 @@ const path = require("path");
 module.exports = {
   createphotography: async (req, res) => {
     try {
-      const { title, description, credits, media, thumbnail, category } =
+      const { newWedding: { srNo, title, description, credits, media, thumbnail, category }, oldWeddings } =
         req.body;
 
       if (!title || !description || !category) {
@@ -14,22 +14,47 @@ module.exports = {
         });
       }
 
-      const newPhotography = new Photography({
-        srNo,
-        title,
-        description,
-        credits: credits || "",
-        media: media || "",
-        thumbnail: thumbnail || "",
-        category,
-      });
+      const bulkOperations = oldWeddings.map((doc) => ({
+        updateOne: {
+          filter: { _id: doc._id },
+          update: { $set: { srNo: doc.srNo } }, // Assign sequential numbers
+        },
+      }));
 
-      await newPhotography.save();
+      bulkOperations.push({
+        insertOne: {
+          document: {
+            srNo,
+            title,
+            description,
+            credits: credits || "",
+            media: media || "",
+            thumbnail: thumbnail || "",
+            category,
+          }
+        }
+      })
 
-      res.status(201).json({
-        message: "Wedding created successfully",
-        data: newPhotography,
-      });
+      if (bulkOperations.length > 0) {
+        const result = await Photography.bulkWrite(bulkOperations);
+
+        if (result.insertedCount > 0) {
+          res
+            .status(201)
+            .json({
+              message: `Wedding created successfully`,
+            });
+        } else {
+          res
+            .status(500)
+            .json({
+              message: `Failed to create wedding`,
+            });
+        }
+
+      } else {
+        console.log("No documents found to update.");
+      }
     } catch (error) {
       console.error(error);
       res
@@ -99,14 +124,14 @@ module.exports = {
   updatePhotographyOrder: async (req, res) => {
     try {
       const documents = req.body;
-      
+
       const bulkOperations = documents.map((doc) => ({
         updateOne: {
           filter: { _id: doc._id },
           update: { $set: { srNo: doc.srNo } }, // Assign sequential numbers
         },
       }));
-      
+
       if (bulkOperations.length > 0) {
         const result = await Photography.bulkWrite(bulkOperations);
         res

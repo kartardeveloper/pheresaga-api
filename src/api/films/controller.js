@@ -3,7 +3,44 @@ const { Films, FilmHeader } = require("../../../models/Films");
 module.exports = {
   createFilm: async (req, res) => {
     try {
+      const { newFilm, oldFilms } = req.body;
+
       const film = await Films.create(req.body);
+
+      const bulkOperations = oldFilms.map((doc) => ({
+        updateOne: {
+          filter: { _id: doc._id },
+          update: { $set: { srNo: doc.srNo } }, // Assign sequential numbers
+        },
+      }));
+
+      bulkOperations.push({
+        insertOne: {
+          document: newFilm
+        }
+      })
+
+      if (bulkOperations.length > 0) {
+        const result = await Films.bulkWrite(bulkOperations);
+
+        if (result.insertedCount > 0) {
+          res
+            .status(201)
+            .json({
+              message: `Wedding created successfully`,
+            });
+        } else {
+          res
+            .status(500)
+            .json({
+              message: `Failed to create wedding`,
+            });
+        }
+
+      } else {
+        console.log("No documents found to update.");
+      }
+
       return res
         .status(201)
         .json({ film, message: "Film created successfully" });
@@ -91,7 +128,7 @@ module.exports = {
         return res.status(404).json({ message: "Wedding not found" });
       }
       // delete media by name
-    } catch (error) {}
+    } catch (error) { }
   },
 
   //Section header

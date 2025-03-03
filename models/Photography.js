@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const photographySchema = new Schema({
   srNo: {
-    type: String,
+    type: Number,
     required: true,
   },
   title: {
