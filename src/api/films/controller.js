@@ -24,26 +24,22 @@ module.exports = {
         const result = await Films.bulkWrite(bulkOperations);
 
         if (result.insertedCount > 0) {
-          res
+          return res
             .status(201)
             .json({
-              message: `Wedding created successfully`,
+              message: `Film created successfully`,
             });
         } else {
-          res
+          return res
             .status(500)
             .json({
-              message: `Failed to create wedding`,
+              message: `Failed to create film`,
             });
         }
 
       } else {
         console.log("No documents found to update.");
       }
-
-      return res
-        .status(201)
-        .json({ film, message: "Film created successfully" });
     } catch (err) {
       return res.status(400).json({ error: "Film creation failed" });
     }

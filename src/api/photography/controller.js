@@ -39,13 +39,13 @@ module.exports = {
         const result = await Photography.bulkWrite(bulkOperations);
 
         if (result.insertedCount > 0) {
-          res
+          return res
             .status(201)
             .json({
               message: `Wedding created successfully`,
             });
         } else {
-          res
+          return res
             .status(500)
             .json({
               message: `Failed to create wedding`,
