@@ -5,7 +5,7 @@ module.exports = {
     try {
       const { newFilm, oldFilms } = req.body;
 
-      const film = await Films.create(req.body);
+      // const film = await Films.create(req.body);
 
       const bulkOperations = oldFilms.map((doc) => ({
         updateOne: {
