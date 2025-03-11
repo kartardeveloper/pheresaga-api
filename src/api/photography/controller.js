@@ -1,3 +1,4 @@
+const { log } = require("console");
 const Photography = require("../../../models/Photography");
 const fs = require("fs");
 const path = require("path");
@@ -5,31 +6,63 @@ const path = require("path");
 module.exports = {
   createphotography: async (req, res) => {
     try {
-      const { title, description, credits, media, thumbnail, category } =
-        req.body;
+      const {
+        newWedding: {
+          srNo,
+          cardTitle,
+          detailedTitle,
+          description,
+          credits,
+          media,
+          thumbnail,
+          category,
+        },
+        oldWeddings,
+      } = req.body;
 
-      if (!title || !description || !category) {
+      if (!cardTitle || !detailedTitle || !description || !category) {
         return res.status(400).json({
           error: "Title, description, and category are required fields",
         });
       }
 
-      const newPhotography = new Photography({
-        srNo,
-        title,
-        description,
-        credits: credits || "",
-        media: media || "",
-        thumbnail: thumbnail || "",
-        category,
+      const bulkOperations = oldWeddings.map((doc) => ({
+        updateOne: {
+          filter: { _id: doc._id },
+          update: { $set: { srNo: doc.srNo } }, // Assign sequential numbers
+        },
+      }));
+
+      bulkOperations.push({
+        insertOne: {
+          document: {
+            srNo,
+            cardTitle,
+            detailedTitle,
+            description,
+            credits: credits || "",
+            media: media || "",
+            thumbnail: thumbnail || "",
+            category,
+          },
+        },
       });
 
-      await newPhotography.save();
+      if (bulkOperations.length > 0) {
+        const result = await Photography.bulkWrite(bulkOperations);
 
-      res.status(201).json({
-        message: "Wedding created successfully",
-        data: newPhotography,
-      });
+        if (result.insertedCount > 0) {
+          return res.status(201).json({
+            message: `Wedding created successfully`,
+          });
+        } else {
+          return res.status(500).json({
+            message: `Failed to create wedding`,
+          });
+        }
+      } else {
+        console.log("No documents found to update.");
+      }
     } catch (error) {
       console.error(error);
       res
@@ -78,10 +111,9 @@ module.exports = {
   updatePhotography: async (req, res) => {
     try {
       const { id } = req.query;
-      const { title, description, media } = req.body;
       const photography = await Photography.findByIdAndUpdate(
         id,
-        { ...req.body, title, description, media },
+        { ...req.body },
         { new: true }
       );
       if (!photography) {
@@ -99,21 +131,19 @@ module.exports = {
   updatePhotographyOrder: async (req, res) => {
     try {
       const documents = req.body;
-      
+
       const bulkOperations = documents.map((doc) => ({
         updateOne: {
           filter: { _id: doc._id },
           update: { $set: { srNo: doc.srNo } }, // Assign sequential numbers
         },
       }));
-      
+
       if (bulkOperations.length > 0) {
         const result = await Photography.bulkWrite(bulkOperations);
-        res
-          .status(200)
-          .json({
-            message: `Matched ${result.matchedCount} documents and modified ${result.modifiedCount} documents`,
-          });
+        res.status(200).json({
+          message: `Matched ${result.matchedCount} documents and modified ${result.modifiedCount} documents`,
+        });
       } else {
         console.log("No documents found to update.");
       }
@@ -129,6 +159,23 @@ module.exports = {
       const photography = await Photography.findByIdAndDelete(id);
       if (!photography) {
         return res.status(404).json({ message: "Wedding not found" });
+      }
+
+      const documents = (await Photography.find())?.sort(
+        (a, b) => a.srNo - b.srNo
+      );
+
+      const bulkOperations = documents.map((doc, index) => ({
+        updateOne: {
+          filter: { _id: doc._id },
+          update: { $set: { srNo: index + 1 } }, // Assign sequential numbers
+        },
+      }));
+
+      if (bulkOperations.length > 0) {
+        const result = await Photography.bulkWrite(bulkOperations);
+      } else {
+        console.log("No documents found to update.");
       }
 
       // if (photography.media) {

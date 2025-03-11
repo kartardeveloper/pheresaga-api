@@ -3,13 +3,18 @@ const Schema = mongoose.Schema;
 
 const photographySchema = new Schema({
   srNo: {
-    type: String,
+    type: Number,
     required: true,
   },
-  title: {
+  cardTitle: {
     type: String,
     required: true,
-    maxlength: 100,
+    maxlength: 1000,
+  },
+  detailedTitle: {
+    type: String,
+    required: true,
+    maxlength: 1000,
   },
   description: {
     type: String,

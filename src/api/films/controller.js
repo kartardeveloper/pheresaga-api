@@ -3,10 +3,38 @@ const { Films, FilmHeader } = require("../../../models/Films");
 module.exports = {
   createFilm: async (req, res) => {
     try {
-      const film = await Films.create(req.body);
-      return res
-        .status(201)
-        .json({ film, message: "Film created successfully" });
+      const { newFilm, oldFilms } = req.body;
+
+      // const film = await Films.create(req.body);
+
+      const bulkOperations = oldFilms.map((doc) => ({
+        updateOne: {
+          filter: { _id: doc._id },
+          update: { $set: { srNo: doc.srNo } }, // Assign sequential numbers
+        },
+      }));
+
+      bulkOperations.push({
+        insertOne: {
+          document: { ...newFilm, srNo: 1 },
+        },
+      });
+
+      if (bulkOperations.length > 0) {
+        const result = await Films.bulkWrite(bulkOperations);
+
+        if (result.insertedCount > 0) {
+          return res.status(201).json({
+            message: `Film created successfully`,
+          });
+        } else {
+          return res.status(500).json({
+            message: `Failed to create film`,
+          });
+        }
+      } else {
+        console.log("No documents found to update.");
+      }
     } catch (err) {
       return res.status(400).json({ error: "Film creation failed" });
     }
@@ -76,7 +104,27 @@ module.exports = {
   },
   deleteFilm: async (req, res) => {
     try {
-      await Films.findByIdAndDelete(req.query.id);
+      const film = await Films.findByIdAndDelete(req.query.id);
+      if (!film) {
+        return res.status(404).json({ message: "Film not found" });
+      }
+
+      const documents = (await Films.find())?.sort(
+        (a, b) => a.srNo - b.srNo
+      );
+
+      const bulkOperations = documents.map((doc, index) => ({
+        updateOne: {
+          filter: { _id: doc._id },
+          update: { $set: { srNo: index + 1 } }, // Assign sequential numbers
+        },
+      }));
+
+      if (bulkOperations.length > 0) {
+        const result = await Films.bulkWrite(bulkOperations);
+      } else {
+        console.log("No documents found to update.");
+      }
       res.status(200).json({ message: "Film deleted successfully" });
     } catch (err) {
       return res.status(400).json({ error: "Film deletion failed" });

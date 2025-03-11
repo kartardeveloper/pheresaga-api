@@ -17,9 +17,8 @@ const homepageSchema = new Schema({
   },
   weddings: [
     {
-      type: String,
-      required: true,
-      maxlength: 100,
+      id: { type: String, required: true, maxlength: 100 },
+      srNo: { type: Number, required: true },
     },
   ],
   video_with_text: {
